@@ -27,7 +27,7 @@ function openCollection(list) {
     if(mycoll.length) {
         var api = github.getGist(mycoll[0].id);
         api.read()
-            .then(function(resp) { gist = resp; console.log(gist); })
+            .then(function(resp) { gist = resp; })
         ;
     }
     else createCollection();
@@ -38,12 +38,25 @@ function createCollection() {
           description: "My DeBoCa record collection.",
           public: false,
           files: {
-                "deboca.json": { content: "blah" }
+                "deboca.json": {
+                    content: {
+                          collection: [{
+                                artist: ""
+                              , album: ""
+                              , songs: [""]
+                            }]
+                        , faves: {
+                                artists: [""]
+                              , albums: [""]
+                              , songs: [""]
+                            }
+                      }
+                  }
             }
         }
     ;
     var api = github.getGist();
     api.create(template)
-        .then(function(resp) { gist = resp; console.log(gist); })
+        .then(function(resp) { gist = resp; })
     ;
 } // createCollection()
