@@ -34,23 +34,25 @@ function openCollection(list) {
 } // openCollection
 
 function createCollection() {
+    var content = {
+          collection: [{
+              artist: "",
+              album: "",
+              songs: []
+            }],
+        faves: {
+              artists: [],
+              albums: [],
+              songs: []
+            }
+      }
+    ;
     var template = {
           description: "My DeBoCa record collection.",
           public: false,
           files: {
                 "deboca.json": {
-                    content: {
-                          collection: [{
-                                artist: ""
-                              , album: ""
-                              , songs: [""]
-                            }]
-                        , faves: {
-                                artists: [""]
-                              , albums: [""]
-                              , songs: [""]
-                            }
-                      }
+                    content: JSON.stringify(content) 
                   }
             }
         }
