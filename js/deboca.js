@@ -27,6 +27,16 @@ function welcome(req) {
     ;
 } // welcome()
 
+function template(content) {
+    return {
+        description: "My DeBoCa record collection."
+      , public: false
+      , files: {
+              "deboca.json": { content: JSON.stringify(content) }
+          }
+    }
+} // template()
+
 function openCollection(list) {
     var mycoll = list.data.filter(function(g) {
         return ~d3.keys(g.files).indexOf('deboca.json');
@@ -43,33 +53,31 @@ function openCollection(list) {
 } // openCollection
 
 function createCollection() {
-    var content = [{
-              artist: {
-                    name: ""
-                  , star: false
-                }
-            , album: {
-                    title: ""
-                  , star: false
-                }
-            , songs: [{
-                    title: ""
-                  , star: false
-                }]
-          }]
-    ;
-    var template = {
-          description: "My DeBoCa record collection.",
-          public: false,
-          files: {
-                "deboca.json": {
-                    content: JSON.stringify(content)
-                  }
-            }
-        }
+    var content = [[
+              {
+                  key: "artist"
+                , value: ""
+                , star: null
+              }
+            , {
+                  key: "album"
+                , value: ""
+                , star: null
+              }
+            , {
+                  key: "songs"
+                , values: [
+                      {
+                          key: "track"
+                        , value: ""
+                        , star: null
+                      }
+                    ]
+              }
+          ]]
     ;
     var api = github.getGist();
-    api.create(template)
+    api.create(template(content))
         .then(function(resp) { gist = resp; })
         .then(renderCollection)
     ;
@@ -82,62 +90,67 @@ function renderCollection() {
     var record = d3.select(".records").selectAll(".record")
         .data(content)
       .enter().append("div")
-        .attr("class", "record col-sm-6 col-md-3")
+        .attr("class", "record panel panel-default col-sm-6 col-md-3")
     ;
-    record.each(function(d) {
-        console.log(d);
-          var self = d3.select(this);
+    record.each(function(rec) {
+        var songs = rec.filter(function(d) { return d.key === "songs"; })
+                      [0].values
+          , notsongs = rec.filter(function(d) { return d.key !== "songs"; })
+        ;
+        var self = d3.select(this);
 
-          var panel = self
-            .append("div")
-              .attr("class", "panel panel-default")
-          ;
-          panel
-            .append("div")
-              .attr("class", "panel-heading")
-            .append("button")
-              .attr("type", "button")
-              .attr("class", "btn btn-primary")
-              .text("Save")
-          ;
-          var group = panel
-            .append("div")
-              .attr("class", "panel-body")
-          ;
-          group
-            .append("input")
-              .attr("type", "text")
-              .attr("class", "artist form-control")
-              .attr("placeholder", "Artist")
-              .attr("value", d.artist.name)
-          ;
-          group
-            .append("input")
-              .attr("type", "text")
-              .attr("class", "album form-control")
-              .attr("placeholder", "Album")
-              .attr("value", d.album.title)
-          ;
-          var tracks = panel
-            .append("div")
-              .attr("class", "panel-footer tracks")
-          ;
-          tracks.selectAll(".track")
-              .data(d.songs, function(o, i) { return i; })
-            .enter().append("input")
-              .attr("type", "text")
-              .attr("class", "track form-control")
-              .attr("placeholder", function(o, i) {
-                  return "Track #" + (i + 1);
-                })
-              .attr("value", function(o) { return o.title; })
-          ;
-          tracks
-            .append("button")
-              .attr("type", "button")
-              .attr("class", "btn btn-primary")
-              .text("Add next track")
-          ;
+        var heading = self
+          .append("div")
+            .attr("class", "panel-heading")
+        ;
+        heading.selectAll("input")
+            .data(notsongs, function(d) { return d.key; })
+          .enter().append("input")
+            .attr("type", "text")
+            .attr("class", "artist form-control")
+            .attr("placeholder", function(d) { return d.key; })
+            .attr("value", function(d) { return d.value; })
+        ;
+        var body = self
+          .append("div")
+            .attr("class", "panel-body")
+        ;
+        body.selectAll(".track")
+            .data(songs, function(o, i) { return i; })
+          .enter().append("input")
+            .attr("type", "text")
+            .attr("class", "track form-control")
+            .attr("placeholder", function(o, i) {
+                return o.key + " " + (i + 1);
+              })
+            .attr("value", function(o) { return o.value; })
+        ;
+        self
+          .append("div")
+            .attr("class", "panel-footer text-right")
+          .append("button")
+            .attr("type", "button")
+            .attr("class", "btn btn-primary")
+            .text("Add next track")
+        ;
       })
     ;
+    // Autosave form to the data in the dom
+    d3.selectAll("input")
+      .on("blur", function(d) {
+          d.value = this.value;
+        })
+    ;
+    // Save Button
+    d3.select("#save")
+      .on("click", saveCollection)
+    ;
 } // renderCollection()
+
+
+function saveCollection() {
+    console.log(github, gist)
+    var data = d3.selectAll(".record").data();
+    var api = github.getGist(gist.data.id);
+    api.update(template(data));
+} // saveCollection()
