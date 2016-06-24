@@ -38,10 +38,19 @@ through the user's collections.
 ### Data
 Being serverless, data is also stored on GitHub: specifically, we make use of
 GitHub's [gist functionality](https://gist.github.com).
+>>>>>>> master
 
 ### Search
 There are two searches possible:
 
+<<<<<<< HEAD
+ * Searching through "my" collection
+ * Searching through everyone's collections
+
+While it would be trivial enough to load the user's records and search through the resultant Objects, both searches are performed via [gist's search api](https://gist.github.com/search#search_cheatsheet_pane).
+
+# Application Flow
+=======
   * Searching through "my collection"
     * in-memory JSON object representing user's collection
   * Searching through everyone's collection
