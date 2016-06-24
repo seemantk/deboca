@@ -1,6 +1,31 @@
 <!doctype html>
 <html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Seemant Kulleen">
+  <meta name="description" content="Recordly application for dev BootCamp">
+
+  <title>DeBoCa Recordly</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+</head>
 <body>
-<p>Hello World</p>
-</body>
-</html>
+<header class="page-header text-center">
+    <h1>Welcome to DeBoCa</h1>
+    <h3>Proof of Concept: Recordly</h3>
+    <h5 class="text-right welcome">Welcome, </h5>
+</header>
+<section class="container">
+    <div class="row">
+        <h2 class="text-center">My Record Collection</h2>
+        <span class="pull-left"><button type="button" class="btn btn-primary" id="save">Save Collection</button></span>
+        <div class="records"></div>
+    </div><!--.row-->
+</section>
+<footer></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/github-api/2.3.0/GitHub.bundle.min.js"></script><!-- Github API -->
+<script src="js/oauth.min.js"></script> <!-- Oauth.IO -->
+<script src="js/deboca.js"></script>
