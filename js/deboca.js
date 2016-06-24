@@ -132,6 +132,7 @@ function renderCollection() {
             .attr("type", "button")
             .attr("class", "btn btn-primary")
             .text("Add next track")
+            .property("disabled", "disabled")
         ;
       })
     ;
