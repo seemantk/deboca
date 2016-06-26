@@ -1,7 +1,7 @@
 ---
 ---
 # deboca
-Design document for the "Recordly" code challenge for DevBootCamp.
+Design document for the "Recordly" code challenge for Dev Bootcamp.
 
 ## Architecture Overview
 For this proof of concept project, the number of servers is minimized as much as
